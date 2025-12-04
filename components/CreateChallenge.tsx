@@ -35,9 +35,9 @@ export default function CreateChallenge() {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
-    tournament: 'Australian Open 2024',
-    startDate: '2024-01-14', // AO 2024 start date
-    endDate: '2024-01-28',   // AO 2024 end date
+    tournament: 'Australian Open 2025',
+    startDate: '2025-01-12', // AO 2025 main draw start date
+    endDate: '2025-01-26',   // AO 2025 finals date
   });
 
   const handleSubmit = async (e: React.FormEvent) => {

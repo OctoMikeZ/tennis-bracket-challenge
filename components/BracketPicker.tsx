@@ -25,7 +25,12 @@ const ROUNDS = [
   { name: 'Finals', matches: 1 }
 ];
 
-export default function BracketPicker({ challengeId, isLocked = false }) {
+interface BracketPickerProps {
+  challengeId: string;
+  isLocked?: boolean;
+}
+
+export default function BracketPicker({ challengeId, isLocked = false }: BracketPickerProps) {
   const [matches, setMatches] = useState<Match[]>([]);
   const [userPicks, setUserPicks] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState(false);

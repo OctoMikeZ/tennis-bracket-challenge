@@ -1,10 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 
-export default function AdminDashboard({ challengeId }) {
-  const [matches, setMatches] = useState([]);
+interface Match {
+  id: string;
+  challenge_id: string;
+  round: number;
+  position: number;
+  player1: string | null;
+  player2: string | null;
+  winner: string | null;
+  status: string;
+}
+
+interface AdminDashboardProps {
+  challengeId: string;
+}
+
+export default function AdminDashboard({ challengeId }: AdminDashboardProps) {
+  const [matches, setMatches] = useState<Match[]>([]);
   const [loading, setLoading] = useState(true);
-  const [editing, setEditing] = useState(null);
+  const [editing, setEditing] = useState<string | null>(null);
   const [activeRound, setActiveRound] = useState(5); // Start with Quarter Finals
 
   const ROUNDS = [
@@ -35,7 +50,7 @@ export default function AdminDashboard({ challengeId }) {
     }
   };
 
-  const updateMatch = async (matchId, updates) => {
+  const updateMatch = async (matchId: string, updates: Partial<Match>) => {
     try {
       const { error } = await supabase
         .from('tournament_matches')
@@ -55,7 +70,7 @@ export default function AdminDashboard({ challengeId }) {
     }
   };
 
-  const updateNextRoundMatch = async (currentMatchId, winner) => {
+  const updateNextRoundMatch = async (currentMatchId: string, winner: string) => {
     try {
       // Find current match to get its position and round
       const currentMatch = matches.find(m => m.id === currentMatchId);
@@ -91,7 +106,7 @@ export default function AdminDashboard({ challengeId }) {
     }
   };
 
-  const EditableMatch = ({ match }) => {
+  const EditableMatch = ({ match }: { match: Match }) => {
     const [player1Name, setPlayer1Name] = useState(match.player1 || '');
     const [player2Name, setPlayer2Name] = useState(match.player2 || '');
 
@@ -103,7 +118,7 @@ export default function AdminDashboard({ challengeId }) {
       setEditing(null);
     };
 
-    const handleSelectWinner = async (winner) => {
+    const handleSelectWinner = async (winner: string) => {
       await updateMatch(match.id, {
         winner,
         status: 'completed'
@@ -178,7 +193,7 @@ export default function AdminDashboard({ challengeId }) {
               <span>{player.name || `Player ${index + 1} (TBD)`}</span>
               {player.name && !match.winner && (
                 <button
-                  onClick={() => handleSelectWinner(player.name)}
+                  onClick={() => player.name && handleSelectWinner(player.name)}
                   className="text-sm px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
                 >
                   Select Winner

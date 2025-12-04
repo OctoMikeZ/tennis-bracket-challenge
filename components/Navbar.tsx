@@ -4,10 +4,15 @@ import { useRouter } from 'next/router';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 
+interface Challenge {
+  id: string;
+  name: string;
+}
+
 const Navbar = () => {
   const router = useRouter();
   const { user } = useAuth();
-  const [adminChallenges, setAdminChallenges] = useState([]);
+  const [adminChallenges, setAdminChallenges] = useState<Challenge[]>([]);
   
   useEffect(() => {
     if (user) {

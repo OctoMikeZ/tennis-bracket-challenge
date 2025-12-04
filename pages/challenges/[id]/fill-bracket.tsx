@@ -4,15 +4,29 @@ import { useAuth } from '../../../contexts/AuthContext';
 import { supabase } from '../../../lib/supabase';
 import Link from 'next/link';
 
+interface Challenge {
+  id: string;
+  name: string;
+  start_date: string;
+}
+
+interface Match {
+  id: string;
+  round: number;
+  position: number;
+  player1: string | null;
+  player2: string | null;
+}
+
 export default function FillBracketPage() {
   const router = useRouter();
   const { id } = router.query;
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [savingPick, setSavingPick] = useState(false);
-  const [challenge, setChallenge] = useState(null);
-  const [matches, setMatches] = useState([]);
-  const [userPicks, setUserPicks] = useState({});
+  const [challenge, setChallenge] = useState<Challenge | null>(null);
+  const [matches, setMatches] = useState<Match[]>([]);
+  const [userPicks, setUserPicks] = useState<Record<string, string>>({});
 
   useEffect(() => {
     if (id && user) {
@@ -51,7 +65,7 @@ export default function FillBracketPage() {
           .from('picks')
           .select('*')
           .eq('challenge_id', id)
-          .eq('user_id', user.id);
+          .eq('user_id', user?.id);
 
         setMatches(matches || []);
         setUserPicks(picks?.reduce((acc, pick) => ({
@@ -66,7 +80,8 @@ export default function FillBracketPage() {
     }
   };
 
-  const handlePickWinner = async (matchId, winner) => {
+  const handlePickWinner = async (matchId: string, winner: string) => {
+    if (!user) return;
     if (savingPick) return;
     
     setSavingPick(true);
@@ -98,7 +113,7 @@ export default function FillBracketPage() {
   };
 
   const isPickComplete = () => {
-    return matches.every(match => userPicks[match.id]);
+    return matches.length > 0 && matches.every(match => userPicks[match.id]);
   };
 
   if (loading) {
@@ -158,4 +173,9 @@ export default function FillBracketPage() {
       </div>
     </div>
   );
+}
+
+// Disable static generation for this dynamic route
+export async function getServerSideProps() {
+  return { props: {} };
 }

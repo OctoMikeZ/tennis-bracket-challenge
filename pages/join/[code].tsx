@@ -144,3 +144,8 @@ export default function JoinChallengePage() {
     </div>
   );
 }
+
+// Disable static generation for this dynamic route
+export async function getServerSideProps() {
+  return { props: {} };
+}

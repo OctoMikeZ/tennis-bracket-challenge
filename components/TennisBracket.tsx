@@ -1,8 +1,20 @@
 import React, { useState } from 'react';
 import { Card } from './ui/card';
 
+interface Player {
+  name: string;
+  seed: number;
+}
+
+interface MatchCardProps {
+  matchId: string;
+  player1: Player;
+  player2: Player;
+  round: number;
+}
+
 const TennisBracket = () => {
-  const [selectedMatch, setSelectedMatch] = useState(null);
+  const [selectedMatch, setSelectedMatch] = useState<string | null>(null);
 
   // Tournament structure
   const ROUNDS = [
@@ -15,7 +27,7 @@ const TennisBracket = () => {
     { name: 'Finals', matches: 1 }
   ];
 
-  const MatchCard = ({ matchId, player1, player2, round }) => (
+  const MatchCard = ({ matchId, player1, player2, round }: MatchCardProps) => (
     <Card 
       className={`p-3 hover:bg-gray-50 cursor-pointer transition-colors ${
         selectedMatch === matchId ? 'ring-2 ring-blue-500' : ''
@@ -37,7 +49,7 @@ const TennisBracket = () => {
   );
 
   // Generate matches for each round
-  const generateMatches = (roundIndex, matchCount) => {
+  const generateMatches = (roundIndex: number, matchCount: number) => {
     return Array.from({ length: matchCount }, (_, matchIndex) => {
       const baseNumber = matchIndex * 2;
       return {

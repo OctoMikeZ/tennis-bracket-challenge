@@ -4,11 +4,21 @@ import { useAuth } from '../../../contexts/AuthContext';
 import { supabase } from '../../../lib/supabase';
 import BracketPicker from '../../../components/BracketPicker';
 
+interface Challenge {
+  id: string;
+  name: string;
+  description: string;
+  tournament: string;
+  start_date: string;
+  end_date: string;
+  created_by: string;
+}
+
 export default function BracketPage() {
   const router = useRouter();
   const { id } = router.query;
   const { user, loading: authLoading } = useAuth();
-  const [challenge, setChallenge] = useState(null);
+  const [challenge, setChallenge] = useState<Challenge | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -65,4 +75,9 @@ export default function BracketPage() {
       )}
     </div>
   );
+}
+
+// Disable static generation for this dynamic route
+export async function getServerSideProps() {
+  return { props: {} };
 }

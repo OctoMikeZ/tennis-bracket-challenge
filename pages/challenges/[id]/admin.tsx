@@ -134,3 +134,8 @@ export default function AdminPage() {
     </div>
   );
 }
+
+// Disable static generation for this dynamic route
+export async function getServerSideProps() {
+  return { props: {} };
+}

@@ -9,6 +9,18 @@ interface Participant {
   rank?: number;
 }
 
+interface ParticipantData {
+  id: string;
+  user_id: string;
+  profiles: {
+    name: string | null;
+    email: string | null;
+  } | null;
+  picks: {
+    points: number;
+  }[] | null;
+}
+
 interface LeaderboardProps {
   challengeId: string;
   className?: string;
@@ -52,7 +64,7 @@ export default function Leaderboard({ challengeId, className = '' }: Leaderboard
       if (error) throw error;
 
       // Calculate total points and sort participants
-      const leaderboardData = data
+      const leaderboardData = (data as unknown as ParticipantData[])
         .map(participant => ({
           user_id: participant.user_id,
           user_name: participant.profiles?.name || 'Anonymous',

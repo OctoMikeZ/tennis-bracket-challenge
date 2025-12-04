@@ -68,7 +68,7 @@ export default function ChallengePage() {
         .select('id')
         .eq('participant_id', participant.id);
 
-      setHasExistingPicks(data && data.length > 0);
+      setHasExistingPicks(!!(data && data.length > 0));
     }
   };
 
@@ -162,4 +162,9 @@ export default function ChallengePage() {
       </div>
     </div>
   );
+}
+
+// Disable static generation for this dynamic route
+export async function getServerSideProps() {
+  return { props: {} };
 }
